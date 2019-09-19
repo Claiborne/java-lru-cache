@@ -78,7 +78,7 @@ class LRUCacheTest {
     }
 
     @Test
-    void testECacheEvict() {
+    void testCacheEvict() {
         LRUCache lrucache = new LRUCache();
 
         // 4 is the max cache size
