@@ -2,7 +2,7 @@ import java.util.HashMap;
 
 public class LRUCache {
 
-    // TODO Limit Max Length
+    // TODO implement max cache size
 
     HashMap<String, Node> cacheMap;
     int MAX_CACHE_LENGTH = 4;
@@ -19,10 +19,10 @@ public class LRUCache {
 
     public void addCache(String key, String value) {
         if (cacheMap.containsKey(key)) {
-            Node node = cacheMap.get(key);
+            Node old = cacheMap.get(key);
+            Node node = new Node();
             node.value = value;
 
-            Node old = cacheMap.get(key);
             removeNode(old);
             addToHead(node);
             cacheMap.put(key, node);
@@ -44,34 +44,25 @@ public class LRUCache {
         return "-1";
     }
 
-    private void addToHead(Node node) {
-        node.left = null;
-        node.right = head;
-        if (head != null) {
-            head.left = node;
-        }
-        head = node;
-        if (tail == null) {
-            tail = node;
-        }
-    }
-
     private void removeNode(Node node) {
         if (node.left != null) {
             node.left.right = node.right;
         }
         if (node.right != null) {
-            if (node.left != null) {
-                node.right.left = node.left;
-            } else {
-                node.right.left = head;
-            }
-        } else {
+            node.right.left = node.left;
+        } else { // else this.tail is being removed and we need to reassign it
             tail = node.left;
         }
-        if (node == head) {
-            head = null;
+    }
+
+    private void addToHead(Node node) {
+        node.right = head;
+        if (head != null) { // when cache size is 0 and thus this.head is null
+            head.left = node;
+        } else {
+            tail = node;  // if cache size is 0, head is also tail
         }
+        head = node;
     }
 
     public static void main(String[] args) {
