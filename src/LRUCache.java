@@ -2,10 +2,8 @@ import java.util.HashMap;
 
 public class LRUCache {
 
-    // TODO implement max cache size
-
     HashMap<String, Node> cacheMap;
-    int MAX_CACHE_LENGTH = 4;
+    int MAX_CACHE_SIZE = 4;
     Node head, tail;
 
     public LRUCache() {
@@ -13,7 +11,7 @@ public class LRUCache {
     }
 
     public class Node {
-        String value;
+        String key, value;
         Node left, right;
     }
 
@@ -22,6 +20,7 @@ public class LRUCache {
             Node old = cacheMap.get(key);
             Node node = new Node();
             node.value = value;
+            node.key = key;
 
             removeNode(old);
             addToHead(node);
@@ -29,8 +28,14 @@ public class LRUCache {
         } else {
             Node node = new Node();
             node.value = value;
+            node.key = key;
             addToHead(node);
             cacheMap.put(key, node);
+        }
+        if (cacheMap.size() > MAX_CACHE_SIZE) {
+            Node lru = cacheMap.get(tail.key);
+            removeNode(lru);
+            cacheMap.remove(lru.key);
         }
     }
 
